@@ -12,8 +12,13 @@ router.get("/", (req, res) => {
     include: [
       {
         model: Product,
-        as: "product_tags",
+        // through: ProductTag, //Just another way to join the table without an alias (as:...)
+        as: "products_tags_data",
         attributes: ["id", "product_name", "price", "stock"],
+        // To not display product_tag with references to IDs
+        through: {
+          attributes: [],
+        },
       },
     ],
   })
@@ -29,14 +34,14 @@ router.get("/:id", (req, res) => {
   // be sure to include its associated Product data
   Tag.findOne({
     where: {
-      id: req.params.id
+      id: req.params.id,
     },
     attributes: ["id", "tag_name"],
     order: [["id", "DESC"]],
     include: [
       {
         model: Product,
-        as: "product_tags",
+        as: "products_tags_data",
         attributes: ["id", "product_name", "price", "stock"],
       },
     ],
